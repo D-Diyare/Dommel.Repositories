@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.218
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dommel.Repositories.Demo", "Demo\Dommel.Repositories.Demo.csproj", "{E56129DB-71B8-4934-84C1-DE5FB8769C3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dommel.Repositories", "Lib\Dommel.Repositories.csproj", "{7C8F9C97-4735-458D-879B-175F4CB2B00D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E56129DB-71B8-4934-84C1-DE5FB8769C3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E56129DB-71B8-4934-84C1-DE5FB8769C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E56129DB-71B8-4934-84C1-DE5FB8769C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E56129DB-71B8-4934-84C1-DE5FB8769C3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C8F9C97-4735-458D-879B-175F4CB2B00D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C8F9C97-4735-458D-879B-175F4CB2B00D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C8F9C97-4735-458D-879B-175F4CB2B00D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C8F9C97-4735-458D-879B-175F4CB2B00D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7234E47-0827-40A6-BCBD-6D036CFC015E}
+	EndGlobalSection
+EndGlobal
