@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <Version>1.0.6</Version>
+        <Version>1.0.7</Version>
         <PackageProjectUrl>https://github.com/D-Diyare/Dommel.Repositories</PackageProjectUrl>
         <RepositoryUrl>https://github.com/D-Diyare/Dommel.Repositories</RepositoryUrl>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -12,8 +12,12 @@
         <PackageTags>dommel;crud;dapper;database;orm;repository;repositorypattern;unitofwork;uow</PackageTags>
         <Company>Diyare Abdulla</Company>
         <Authors>Diyare Abdulla</Authors>
+        <PackageReadmeFile>README.MD</PackageReadmeFile>
+        <Title>Dommel.Repositories</Title>
     </PropertyGroup>
-
+    <ItemGroup>
+        <None Include="..\..\README.MD" Pack="true" PackagePath="" />
+    </ItemGroup>
     <ItemGroup>
       <None Remove="nuget.config" />
     </ItemGroup>
