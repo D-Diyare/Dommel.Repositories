@@ -213,6 +213,9 @@ public class CategoryRepository : SyncRepository<Category>, ICategoryRepository
 Then simply registering it like:
 
     Container.RegisterType<ICategoryRepository, CategoryRepository>();
+    
+    
+    Container.RegisterType<ISyncUnitOfWork, AppDbContext>();
 
 ### License
 > [MIT License](https://github.com/D-Diyare/Dommel.Repositories/blob/master/LICENSE)
