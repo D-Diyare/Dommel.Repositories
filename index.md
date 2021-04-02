@@ -1,37 +1,218 @@
-## Welcome to GitHub Pages
+# Dommel.Repositories
+Repository Pattern &amp; UnitOfWork Implementation For [Dommel](https://github.com/henkmollema/Dommel).
 
-You can use the [editor on GitHub](https://github.com/D-Diyare/Dommel.Repositories/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+### Description
+> Dommel.Repositories is a library that makes the implementation of Repository Pattern and UnitOfWork a lot easier.
+The Implementation sample taken from [Tim Schreiber](https://github.com/timschreiber/DapperUnitOfWork) example.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Download
 
-### Markdown
+Nuget
+> Directly download from [Nuget](https://www.nuget.org/packages/Dommel.Repositories/)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Package Manager Console 
+> PM > Install-Package Dommel.Repositories
 
-```markdown
-Syntax highlighted code block
+### Usage
 
-# Header 1
-## Header 2
-### Header 3
+POCO's:
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```cs
+[Table(nameof(Category))]
+public class Category
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    
+    public string Name { get; set; }
+    
+    public ICollection<Product> Products { get; set; }
+}
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+```cs
+[Table(nameof(Product))]
+public class Product
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    
+    public string Name { get; set; }
+    public int Quantity { get; set; }
 
-### Jekyll Themes
+    public int? CategoryId { get; set; }
+    public Category Category { get; set; }
+}
+```
+#### Dommel.Repositories contains two types of repositories and unit of works:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/D-Diyare/Dommel.Repositories/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+1. Async Repository (Asynchronous CRUD operations)
+    <br>- Async UnitOfWork
+   
+2. Sync Repository (Synchronous CRUD Operations)
+   <br>- Sync UnitOfWork
+   
+It's all up to you to inherit from which one, Here we inherit the repository for entities from synchronous repository base.
 
-### Support or Contact
+```cs
+public class CategoryRepository : SyncRepository<Category>
+{
+    public CategoryRepository(IDbConnection connection) : base(connection)
+    {
+    }
+    
+    // Custom other operations other than those provided by the library.
+}
+```
+```cs
+public class ProductRepository : SyncRepository<Product>
+{
+    public ProductRepository(IDbConnection connection) : base(connection)
+    {
+    }
+    
+    // Custom other operations other than those provided by the library.
+}
+```
+We also inherit our context from synchronous unitofwork:
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+```cs
+public class AppDbContext : SyncUnitOfWork
+{
+    private ISyncRepository<Category> _categories;
+    private ISyncRepository<Product> _products;
+
+    public AppDbContext(IConnection connection, IConnectionHelper connectionHelper)
+        : base(connection, connectionHelper)
+    {
+    }
+
+    public ISyncRepository<Product> Products =>
+        _products ?? new ProductRepository(Connection);
+
+    public ISyncRepository<Category> Categories =>
+        _categories ?? new CategoryRepository(Connection);
+
+    protected override void ResetRepositories()
+    {
+        _products = null;
+        _categories = null;
+    }
+}
+```
+Note:
+> Both AsyncUnitOfWork and SyncUnitOfWork contain constructor parameters 
+> -[x] [IConnection](https://github.com/D-Diyare/Dommel.Repositories/blob/master/src/Lib/Dommel.Repositories/Connection/IConnection.cs) (Connection type such as SQLiteConnection, SqlConnection, MySqlConnection, ...)
+> -[x] [IConnectionHelper](https://github.com/D-Diyare/Dommel.Repositories/blob/master/src/Lib/Dommel.Repositories/Connection/IConnectionHelper.cs) (Connection string)
+
+You need to implement these two interfaces as well, for example (sqlite):
+
+```cs
+public class DbConnection : IConnection
+{
+    public IDbConnection Connection(string connectionString)
+    {
+        return new SQLiteConnection(connectionString);
+    }
+}
+```
+```cs
+public class ConnectionHelper : IConnectionHelper
+{
+    public string ConnectionString => @"Data Source=.\Database.db;Version=3;";
+}
+```
+
+```cs
+internal static class Program
+{
+    static void Main(string[] args)
+    {
+        // Insert Category
+        using var context = new AppDbContext(new DbConnection(), new ConnectionHelper());
+        var result = (long) context.Categories.Insert(category) > 0;
+        result &= context.SaveChanges();
+        if (result)
+            Console.WriteLine($"{category.Name} Successfully Inserted.");
+            
+        // Read Category By Id with it's products.
+        using var context = new AppDbContext(new DbConnection(), new ConnectionHelper());
+        var category = context.Categories.GetById<Product>(1);
+        Console.WriteLine(
+            $" Category Id : {category.Id} \n Category Name : {category.Name} \n Product : {category.Products.FirstOrDefault()?.Name}");
+            
+        // Read Products with their categories.
+        using var context = new AppDbContext(new DbConnection(), new ConnectionHelper());
+        // Get Products with their categories.
+        var products = context.Products.GetAll<Category>();
+        foreach (var product in products)
+        {
+            Console.WriteLine(
+                $" Product Id : {product.Id} \n Product Name : {product.Name} \n CategoryName : {product.Category?.Name}");
+        }
+            
+    }
+{ 
+```
+
+> See the full **[Demo](https://github.com/D-Diyare/Dommel.Repositories/tree/master/src/Demo)**.
+ 
+### What's included inside repository ?
+
+```cs 
+T GetById(int id);
+T GetById<T2>(int id);
+T GetById<T2, T3>(int id);
+T GetById<T2, T3, T4>(int id);
+T GetById<T2, T3, T4, T5>(int id);
+T GetById<T2, T3, T4, T5, T6>(int id);
+
+IEnumerable<T> GetAll();
+IEnumerable<T> GetAll<T2>();
+IEnumerable<T> GetAll<T2, T3>();
+IEnumerable<T> GetAll<T2, T3, T4>();
+IEnumerable<T> GetAll<T2, T3, T4, T5>();
+IEnumerable<T> GetAll<T2, T3, T4, T5, T6>();
+
+object Insert(T entity);
+
+bool Delete(T entity);
+int DeleteMultiple(Expression<Func<T, bool>> predicate);
+int DeleteAll();
+
+bool Update(T entity);
+
+IEnumerable<T> Select(Expression<Func<T, bool>> predicate);
+IEnumerable<T> SelectPaged(Expression<Func<T, bool>> predicate, int pageNumber, int pageSize);
+
+T FirstOrDefault(Expression<Func<T, bool>> predicate);
+```
+
+### What if I want to use it with dependency injection?
+
+You can simply create an interface for the repository inhert from IAsyncRepository<T> or ISyncRepository<T>
+
+```cs 
+public interface ICategoryRepository : ISyncRepository<Category>
+{
+    
+}
+```
+
+```cs 
+public class CategoryRepository : SyncRepository<Category>, ICategoryRepository
+{
+    public CategoryRepository(IDbConnection connection) : base(connection)
+    {
+    }
+}
+```
+
+Then simply registering it like:
+
+    Container.RegisterType<ICategoryRepository, CategoryRepository>();
+
+### License
+> [MIT License](https://github.com/D-Diyare/Dommel.Repositories/blob/master/LICENSE)
