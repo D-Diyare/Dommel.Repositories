@@ -356,3 +356,5 @@ MigrationBackup/
 .ionide/
 .vscode/launch.json
 .gitignore
+/src/.idea/.idea.Dommel.Repositories/.idea/dataSources/fe1b6652-aaec-4161-abc0-6f7d7003c04e.xml
+/src/.idea/.idea.Dommel.Repositories/.idea/dataSources.xml

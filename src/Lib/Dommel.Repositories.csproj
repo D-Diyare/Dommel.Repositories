@@ -13,7 +13,7 @@
         <Company>Diyare Abdulla</Company>
         <Authors>Diyare Abdulla</Authors>
         <Title>Dommel.Repositories</Title>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/D-Diyare/Dommel.Repositories/master/LICENSE</PackageLicenseUrl>
+        <!--<PackageLicenseUrl>https://raw.githubusercontent.com/D-Diyare/Dommel.Repositories/master/LICENSE</PackageLicenseUrl>-->
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
