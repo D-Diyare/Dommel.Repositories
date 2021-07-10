@@ -1,21 +1,21 @@
-﻿using System;
+﻿using Dommel.Repositories.Connection;
+using System;
 using System.Data;
 using System.Threading.Tasks;
-using Dommel.Repositories.Connection;
 
 namespace Dommel.Repositories.UnitOfWork.Async
 {
     public abstract class AsyncUnitOfWork : IAsyncUnitOfWork
     {
-        private IDbConnection _connection;
+        protected IDbConnection Connection;
         private bool _disposed;
         private IDbTransaction _transaction;
 
         protected AsyncUnitOfWork(IConnection connection, IConnectionHelper connectionHelper)
         {
-            _connection = connection.Connection(connectionHelper.ConnectionString);
-            _connection.Open();
-            _transaction = _connection.BeginTransaction();
+            Connection = connection.Connection(connectionHelper.ConnectionString);
+            Connection.Open();
+            _transaction = Connection.BeginTransaction();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Dommel.Repositories.UnitOfWork.Async
                     if (_transaction != null)
                     {
                         _transaction.Dispose();
-                        _transaction = _connection.BeginTransaction();
+                        _transaction = Connection.BeginTransaction();
                         ResetRepositories();
                     }
                 }
@@ -70,10 +70,10 @@ namespace Dommel.Repositories.UnitOfWork.Async
                     _transaction = null;
                 }
 
-                if (_connection != null)
+                if (Connection != null)
                 {
-                    _connection.Dispose();
-                    _connection = null;
+                    Connection.Dispose();
+                    Connection = null;
                 }
             }
 

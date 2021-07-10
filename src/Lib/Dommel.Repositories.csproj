@@ -12,18 +12,17 @@
         <PackageTags>dommel;crud;dapper;database;orm;repository;repositorypattern;unitofwork;uow</PackageTags>
         <Company>Diyare Abdulla</Company>
         <Authors>Diyare Abdulla</Authors>
-        <PackageReadmeFile>README.MD</PackageReadmeFile>
         <Title>Dommel.Repositories</Title>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/D-Diyare/Dommel.Repositories/master/LICENSE</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
-    <ItemGroup>
-        <None Include="..\..\README.MD" Pack="true" PackagePath="" />
-    </ItemGroup>
     <ItemGroup>
       <None Remove="nuget.config" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dommel" Version="2.1.0" />
+        <PackageReference Include="Dommel" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

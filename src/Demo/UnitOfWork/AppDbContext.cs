@@ -13,8 +13,8 @@ namespace Dommel.Repositories.Demo.UnitOfWork
         private ISyncRepository<Product> _products;
 
 
-        public AppDbContext(IConnection connection, IConnectionHelper connectionHelper)
-            : base(connection, connectionHelper)
+        public AppDbContext(IConnection connection, IConnectionHelper connectionHelper) : base(connection,
+            connectionHelper)
         {
         }
 
@@ -23,7 +23,6 @@ namespace Dommel.Repositories.Demo.UnitOfWork
 
         public ISyncRepository<Category> Categories =>
             _categories ?? new CategoryRepository(Connection);
-
 
         protected override void ResetRepositories()
         {
